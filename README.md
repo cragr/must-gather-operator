@@ -20,6 +20,28 @@ spec:
 
 This request will collect the standard must-gather info and upload it to case `#02527285` using the credentials found in the `caseManagementCreds` secret.
 
+## Using a custom SFTP port
+
+By default the operator uploads to `sftp.access.redhat.com` on port 22. If outbound port 22 is blocked in your environment, Red Hat also accepts uploads on port 80 at the same address. Set the optional `port` field to override:
+
+```yaml
+apiVersion: operator.openshift.io/v1alpha1
+kind: MustGather
+metadata:
+  name: example-mustgather-port80
+spec:
+  serviceAccountName: must-gather-admin
+  uploadTarget:
+    type: SFTP
+    sftp:
+      caseID: '02527285'
+      caseManagementAccountSecretRef:
+        name: case-management-creds
+      port: 80
+```
+
+`port` accepts any value from 1–65535 and defaults to 22 when omitted.
+
 ## Collecting Audit logs
 The field `audit` is **false** by default unless explicetely set to **true**.
 This will generate the default collection of audit logs as per [the collection script: gather_audit_logs](https://github.com/openshift/must-gather/blob/master/collection-scripts/gather_audit_logs)
